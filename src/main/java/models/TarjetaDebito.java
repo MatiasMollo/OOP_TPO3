@@ -1,11 +1,10 @@
 package models;
 
 public class TarjetaDebito extends Tarjeta{
-    private float devIVA;
+    private float devIVA = 0.21F;
 
-    public TarjetaDebito(Cliente cliente, String numero, float devIVA) {
+    public TarjetaDebito(Cliente cliente, String numero) {
         super(cliente, numero);
-        this.devIVA = devIVA;
     }
 
     public float getDevIVA() {

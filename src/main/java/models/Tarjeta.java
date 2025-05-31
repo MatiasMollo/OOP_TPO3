@@ -23,4 +23,13 @@ public abstract class Tarjeta {
     public String getNumero() {
         return this.numero;
     }
+
+    @Override
+    public String toString() {
+        return "Tarjeta{" +
+                "cliente=" + cliente +
+                ", consumos=" + consumos +
+                ", numero=" + numero +
+                '}';
+    }
 }

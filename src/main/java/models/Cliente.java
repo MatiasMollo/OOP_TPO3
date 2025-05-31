@@ -16,4 +16,12 @@ public class Cliente {
     public int getDni() {
         return this.dni;
     }
+
+    @Override
+    public String toString() {
+        return "Cliente{" +
+                "nombre='" + nombre + '\'' +
+                ", dni=" + dni +
+                '}';
+    }
 }
