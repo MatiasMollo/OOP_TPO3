@@ -1,25 +1,22 @@
 package models;
 
+import java.util.Date;
+
 public class Consumo {
 
-    private int mes;
-    private int ano;
+    private Date fecha;
     private String establecimiento;
     private float monto;
 
-    public Consumo(int mes, int ano, String establecimiento, float monto) {
-        this.mes = mes;
-        this.ano = ano;
+    public Consumo(Date mes, String establecimiento, float monto) {
+        this.fecha = fecha;
         this.establecimiento = establecimiento;
         this.monto = monto;
     }
 
-    public int getMes() {
-        return this.mes;
-    }
 
-    public int getAno() {
-        return this.ano;
+    public Date getFecha() {
+        return this.fecha;
     }
 
     public String getEstablecimiento() {

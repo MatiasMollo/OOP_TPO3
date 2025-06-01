@@ -1,5 +1,6 @@
 package controllers;
 
+import dto.ClienteDTO;
 import models.Cliente;
 
 import java.util.ArrayList;
@@ -42,25 +43,24 @@ public class ClienteController {
 
     /**
      * Gestiona la creación de un cliente
-     * @param nombre String
-     * @param dni int
+     * @param clienteDto ClienteDTO
      * @return
      * @throws Exception
      */
-    public Cliente agregarCliente(String nombre, int dni) throws Exception
+    public Cliente agregarCliente(ClienteDTO clienteDto) throws Exception
     {
         Cliente cliente = null;
         boolean found = false;
         int x = 0;
 
         while(!found && x < clientes.size()){
-            if(clientes.get(x).getDni() == dni) found = true;
+            if(clientes.get(x).getDni() == clienteDto.getDni()) found = true;
             x++;
         }
 
-        if(found) throw new Exception("El cliente con DNI " + dni + " ya se encuentra registrado");
+        if(found) throw new Exception("El cliente con DNI " + clienteDto.getDni() + " ya se encuentra registrado");
 
-        cliente = new Cliente(nombre, dni);
+        cliente = new Cliente(clienteDto.getNombre(), clienteDto.getDni());
         clientes.add(cliente);
 
         return cliente;

@@ -1,11 +1,10 @@
 package controllers;
 
-import models.Cliente;
-import models.Tarjeta;
-import models.TarjetaCredito;
-import models.TarjetaDebito;
+import dto.AgregarTarjetaDTO;
+import models.*;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Random;
 
@@ -36,32 +35,26 @@ public class TarjetaController {
 
     /**
      * Gestiona la creación de una nueva tarjeta, si la misma es válida, la agrega a la lista de tarjetas
-     * @param dniCliente
-     * @param tipoTarjeta
+     * @param tarjetaDto TarjetaDTO
      * @return Tarjeta
      * @throws Exception
      */
-    public Tarjeta agregarTarjeta(int dniCliente, String tipoTarjeta) throws Exception
+    public Tarjeta agregarTarjeta(AgregarTarjetaDTO tarjetaDto) throws Exception
     {
         boolean found = false;
         int x = 0;
-        Tarjeta tarjeta = null;
-
-        while(x < this.tarjetas.size() && !found){
-            if(this.tarjetas.get(x).getCliente().getDni() == dniCliente) found = true;
-            x++;
-        }
+        Tarjeta tarjeta = this.buscarTarjeta(Integer.toString(tarjetaDto.getDni()));
 
         // Se verifica que no haya una tarjeta con el dni
-        if(found) throw new Exception("El cliente ya posee una tarjeta");
+        if(tarjeta != null) throw new Exception("El cliente ya posee una tarjeta");
         else{
             ClienteController clientes = ClienteController.getInstance();
 
             // Se verifica que exista el cliente, lanza una excepción de forma automática en caso de no existir
-            Cliente cliente = clientes.getCliente(dniCliente);
+            Cliente cliente = clientes.getCliente(tarjetaDto.getDni());
 
             // Crea la tarjeta
-            tarjeta = crearTarjeta(cliente, tipoTarjeta);
+            tarjeta = crearTarjeta(cliente, tarjetaDto.getTipo());
             tarjetas.add(tarjeta);
         }
 
@@ -117,6 +110,49 @@ public class TarjetaController {
         else if (tipo.toUpperCase().equals("CREDITO")) tarjeta = new TarjetaCredito(cliente, numero);
 
         else throw new Exception("El tipo de tarjeta es inválido");
+
+        return tarjeta;
+    }
+
+    /**
+     * Agrega el consumo a la tarjeta correspondiente
+     * @param numeroTarjeta String
+     * @param fecha Date
+     * @param importe float
+     * @param establecimiento String
+     * @return
+     * @throws Exception
+     */
+    public Consumo agregarConsumo(String numeroTarjeta, Date fecha, float importe, String establecimiento) throws Exception
+    {
+        Tarjeta tarjeta = this.buscarTarjeta(numeroTarjeta);
+
+        if(tarjeta == null) throw new Exception("La tarjeta no existe en los registros");
+
+        Consumo consumo = new Consumo(fecha, establecimiento, importe);
+        tarjeta.agregarConsumo(consumo);
+
+        return consumo;
+    }
+
+    /**
+     * Realiza una búsqueda sobre las tarjetas en base al número de tarjeta o dni de cliente
+     * @param numero String
+     * @return Tarjeta
+     */
+    public Tarjeta buscarTarjeta(String numero)
+    {
+        Tarjeta tarjeta = null;
+        int x = 0;
+
+        // Para números de 16 dígitos, se busca por número de tarjeta. Para números con menos digitos, por DNI
+        boolean busquedaPorDni = numero.length() < 16;
+
+        while(x < this.tarjetas.size() && tarjeta == null){
+            if((busquedaPorDni && Integer.parseInt(numero) == this.tarjetas.get(x).getCliente().getDni()) || numero.equals(this.tarjetas.get(x).getNumero()))
+                tarjeta = this.tarjetas.get(x);
+            x++;
+        }
 
         return tarjeta;
     }

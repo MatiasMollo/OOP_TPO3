@@ -16,6 +16,10 @@ public abstract class Tarjeta {
         return this.cliente;
     }
 
+    public void agregarConsumo(Consumo consumo)
+    {
+        this.consumos.add(consumo);
+    }
     public List<Consumo> getConsumos() {
         return this.consumos;
     }
