@@ -1,5 +1,6 @@
 package models;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public abstract class Tarjeta {
@@ -10,6 +11,7 @@ public abstract class Tarjeta {
     public Tarjeta(Cliente cliente, String numero) {
         this.cliente = cliente;
         this.numero = numero;
+        this.consumos = new ArrayList<>();
     }
 
     public Cliente getCliente() {
