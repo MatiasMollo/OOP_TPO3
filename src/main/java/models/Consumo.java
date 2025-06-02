@@ -8,7 +8,7 @@ public class Consumo {
     private String establecimiento;
     private float monto;
 
-    public Consumo(Date mes, String establecimiento, float monto) {
+    public Consumo(Date fecha, String establecimiento, float monto) {
         this.fecha = fecha;
         this.establecimiento = establecimiento;
         this.monto = monto;
