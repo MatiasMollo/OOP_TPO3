@@ -22,6 +22,7 @@ public class TarjetaController {
         return instance;
     }
 
+
     /**
      * Retorna todas las tarjetas almacenadas
      * @return List<Tarjeta>
@@ -124,13 +125,13 @@ public class TarjetaController {
         Tarjeta tarjeta = this.buscarTarjeta(agregarConsumoDTO.getNumeroTarjeta());
         if(tarjeta == null) throw new Exception("La tarjeta no existe en los registros");
 
-        Consumo consumo = getConsumo(agregarConsumoDTO);
+        Consumo consumo = parsearConsumo(agregarConsumoDTO);
         tarjeta.agregarConsumo(consumo);
 
         return consumo;
     }
 
-    public Consumo getConsumo (AgregarConsumoDTO agregarConsumoDTO){
+    public Consumo parsearConsumo(AgregarConsumoDTO agregarConsumoDTO){
         Date fecha = agregarConsumoDTO.getFecha();
         String establecimiento = agregarConsumoDTO.getEstablecimiento();
         Float monto = agregarConsumoDTO.getMonto();
@@ -161,28 +162,31 @@ public class TarjetaController {
     }
 
     public double calcularTotalConsumo(String numeroTarjeta, Date fechaInicio, Date fechaFinalizacion) {
-        Tarjeta tarjeta =  buscarTarjeta(numeroTarjeta);
-        List<Consumo> consumos = tarjeta.getConsumos();
+        List<Consumo> consumosEnRango = getConsumos(numeroTarjeta, fechaInicio, fechaFinalizacion);
         double total = 0;
 
-        if (consumos == null) {
-            return 0;
-
-        } else {
-            for (Consumo consumo : consumos) {
-                Date fecha = consumo.getFecha();
-
-                //si la diferencia en dias con la fecha menor es mayor que cero
-                if (fecha.compareTo(fechaInicio) >= 0
-                        // y la diferencia en dias con la fecha mayor es menor que cero
-                        && fecha.compareTo(fechaFinalizacion) <= 0) {
-                    total += consumo.getMonto();
-                }
-
-            }
+        for (Consumo consumo : consumosEnRango) {
+            total += consumo.getMonto();
         }
 
         return total;
+    }
+
+    public List<Consumo> getConsumos(String numeroTarjeta, Date fechaInicio, Date fechaFinalizacion) {
+        Tarjeta tarjeta = buscarTarjeta(numeroTarjeta);
+        List<Consumo> consumos = tarjeta.getConsumos();
+
+        List<Consumo> consumosEnRango = new ArrayList<>();
+
+        for (Consumo consumo : consumos) {
+            Date fecha = consumo.getFecha();
+
+            if (fecha.compareTo(fechaInicio) >= 0 && fecha.compareTo(fechaFinalizacion) <= 0) {
+                consumosEnRango.add(consumo);
+            }
+        }
+
+        return consumosEnRango;
     }
 
 }
