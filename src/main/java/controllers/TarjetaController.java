@@ -2,6 +2,7 @@ package controllers;
 
 import dto.AgregarConsumoDTO;
 import dto.AgregarTarjetaDTO;
+import dto.ConsultarConsumoDTO;
 import models.*;
 
 import java.util.*;
@@ -161,8 +162,8 @@ public class TarjetaController {
         return tarjeta;
     }
 
-    public double calcularTotalConsumo(String numeroTarjeta, Date fechaInicio, Date fechaFinalizacion) {
-        List<Consumo> consumosEnRango = getConsumos(numeroTarjeta, fechaInicio, fechaFinalizacion);
+    public double calcularTotalConsumo(ConsultarConsumoDTO consultarConsumoDTO) {
+        List<Consumo> consumosEnRango = getConsumos(consultarConsumoDTO);
         double total = 0;
 
         for (Consumo consumo : consumosEnRango) {
@@ -172,16 +173,16 @@ public class TarjetaController {
         return total;
     }
 
-    public List<Consumo> getConsumos(String numeroTarjeta, Date fechaInicio, Date fechaFinalizacion) {
-        Tarjeta tarjeta = buscarTarjeta(numeroTarjeta);
+    public List<Consumo> getConsumos(ConsultarConsumoDTO consultarConsumoDTO) {
+        Tarjeta tarjeta = buscarTarjeta(consultarConsumoDTO.getNumeroTarjeta());
         List<Consumo> consumos = tarjeta.getConsumos();
-
         List<Consumo> consumosEnRango = new ArrayList<>();
 
         for (Consumo consumo : consumos) {
             Date fecha = consumo.getFecha();
 
-            if (fecha.compareTo(fechaInicio) >= 0 && fecha.compareTo(fechaFinalizacion) <= 0) {
+            if (fecha.compareTo(consultarConsumoDTO.getFechaInicio()) >= 0
+                    && fecha.compareTo(consultarConsumoDTO.getFechaFin()) <= 0) {
                 consumosEnRango.add(consumo);
             }
         }
