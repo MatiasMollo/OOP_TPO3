@@ -18,7 +18,7 @@ public class AgregarTarjeta extends JFrame {
     private JButton cancelar;
 
     public AgregarTarjeta() {
-        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         setLayout(new GridLayout(3,2));
         setSize(500,400);
 
@@ -51,6 +51,9 @@ public class AgregarTarjeta extends JFrame {
 
         this.guardar.addActionListener(e -> agregar());
         this.cancelar.addActionListener(e -> dispose());
+
+        setVisible(true);
+
     }
 
 
@@ -67,8 +70,11 @@ public class AgregarTarjeta extends JFrame {
         } catch (Exception e) {
             JOptionPane.showMessageDialog(null, e.getMessage());
         }
+    }
 
-
+    public static void main()
+    {
+        SwingUtilities.invokeLater(AgregarTarjeta::new);
     }
 
 }

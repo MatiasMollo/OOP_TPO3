@@ -21,7 +21,7 @@ public class AgregarCliente extends JFrame {
 
 
     public AgregarCliente(){
-        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         setLayout(new GridLayout(3,2));
         setSize(500,400);
 
@@ -46,6 +46,9 @@ public class AgregarCliente extends JFrame {
 
         this.agregar.addActionListener(e -> guardar());
         this.cancelar.addActionListener(e -> dispose());
+
+        setVisible(true);
+
     }
 
     private void guardar(){
@@ -61,6 +64,11 @@ public class AgregarCliente extends JFrame {
         catch (Exception e){
             JOptionPane.showMessageDialog(this, e.getMessage());
         }
+    }
+
+    public static void main()
+    {
+        SwingUtilities.invokeLater(AgregarCliente::new);
     }
 
 }
