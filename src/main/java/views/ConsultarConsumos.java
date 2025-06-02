@@ -91,7 +91,7 @@ public class ConsultarConsumos extends JFrame {
             ConsultarConsumoDTO consultarConsumoDTO = new ConsultarConsumoDTO(numeroTarjeta, datos.fechaInicio, datos.fechaFin);
 
             List<Consumo> consumos = tarjetas.getConsumos(consultarConsumoDTO);
-            double total = tarjetas.calcularTotalConsumo(consultarConsumoDTO);
+            double total = tarjetas.calcularConsumoReal(consultarConsumoDTO);
 
             // Actualizar tabla
             tablaModelo.setRowCount(0);

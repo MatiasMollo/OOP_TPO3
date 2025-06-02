@@ -167,7 +167,7 @@ public class TarjetaController {
     Para Tarjetas de Crédito: Se suman todos los consumos del período y se añade el interés,
     calculado en base a un porcentaje específico.
     */
-    public double calcularTotalConsumo(ConsultarConsumoDTO consultarConsumoDTO) {
+    public double calcularConsumoReal(ConsultarConsumoDTO consultarConsumoDTO) {
         List<Consumo> consumosEnRango = getConsumos(consultarConsumoDTO);
         Tarjeta tarjeta = buscarTarjeta(consultarConsumoDTO.getNumeroTarjeta());
         double total = 0;
