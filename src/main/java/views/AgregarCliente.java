@@ -21,7 +21,7 @@ public class AgregarCliente extends JFrame {
 
 
     public AgregarCliente(){
-        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         setLayout(new GridLayout(3,2));
         setSize(500,400);
 
@@ -46,21 +46,37 @@ public class AgregarCliente extends JFrame {
 
         this.agregar.addActionListener(e -> guardar());
         this.cancelar.addActionListener(e -> dispose());
+
+        setVisible(true);
+
     }
 
     private void guardar(){
-        ClienteDTO cliente = new ClienteDTO(
-                nombreTxt.getText(),
-                Integer.parseInt(dniTxt.getText())
-        );
-
         try{
+            this.verifyData();
+            ClienteDTO cliente = new ClienteDTO(
+                    nombreTxt.getText(),
+                    Integer.parseInt(dniTxt.getText())
+            );
+
             this.clientes.agregarCliente(cliente);
             JOptionPane.showMessageDialog(this, "Cliente agregado exitosamente");
         }
         catch (Exception e){
             JOptionPane.showMessageDialog(this, e.getMessage());
         }
+    }
+
+
+    /**
+     * Verifica que los datos sean válidos
+     * @throws Exception
+     */
+    private void verifyData() throws Exception
+    {
+        if(nombreTxt.getText().isEmpty() || nombreTxt.getText().length() < 3) throw new Exception("El nombre no es válido");
+        if(!dniTxt.getText().matches("\\d+")) throw new Exception("El DNI ingresado no es válido");
+
     }
 
 }
