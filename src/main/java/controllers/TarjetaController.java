@@ -1,5 +1,6 @@
 package controllers;
 
+import dto.AgregarConsumoDTO;
 import dto.AgregarTarjetaDTO;
 import models.*;
 
@@ -113,23 +114,28 @@ public class TarjetaController {
 
     /**
      * Agrega el consumo a la tarjeta correspondiente
-     * @param numeroTarjeta String
-     * @param fecha Date
-     * @param importe float
-     * @param establecimiento String
+     * @param agregarConsumoDTO AgregarConsumoDTO
      * @return
      * @throws Exception
      */
-    public Consumo agregarConsumo(String numeroTarjeta, Date fecha, float importe, String establecimiento) throws Exception
+    public Consumo agregarConsumo(AgregarConsumoDTO agregarConsumoDTO) throws Exception
     {
-        Tarjeta tarjeta = this.buscarTarjeta(numeroTarjeta);
-
+        //verifica que tarjeta exista
+        Tarjeta tarjeta = this.buscarTarjeta(agregarConsumoDTO.getNumeroTarjeta());
         if(tarjeta == null) throw new Exception("La tarjeta no existe en los registros");
 
-        Consumo consumo = new Consumo(fecha, establecimiento, importe);
+        Consumo consumo = getConsumo(agregarConsumoDTO);
         tarjeta.agregarConsumo(consumo);
 
         return consumo;
+    }
+
+    public Consumo getConsumo (AgregarConsumoDTO agregarConsumoDTO){
+        Date fecha = agregarConsumoDTO.getFecha();
+        String establecimiento = agregarConsumoDTO.getEstablecimiento();
+        Float monto = agregarConsumoDTO.getMonto();
+
+        return new Consumo(fecha, establecimiento, monto);
     }
 
     /**
