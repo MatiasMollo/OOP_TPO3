@@ -3,10 +3,7 @@ package controllers;
 import dto.AgregarTarjetaDTO;
 import models.*;
 
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.Random;
+import java.util.*;
 
 public class TarjetaController {
     private List<Tarjeta> tarjetas;
@@ -156,4 +153,30 @@ public class TarjetaController {
 
         return tarjeta;
     }
+
+    public double calcularTotalConsumo(String numeroTarjeta, Date fechaInicio, Date fechaFinalizacion) {
+        Tarjeta tarjeta =  buscarTarjeta(numeroTarjeta);
+        List<Consumo> consumos = tarjeta.getConsumos();
+        double total = 0;
+
+        if (consumos == null) {
+            return 0;
+
+        } else {
+            for (Consumo consumo : consumos) {
+                Date fecha = consumo.getFecha();
+
+                //si la diferencia en dias con la fecha menor es mayor que cero
+                if (fecha.compareTo(fechaInicio) >= 0
+                        // y la diferencia en dias con la fecha mayor es menor que cero
+                        && fecha.compareTo(fechaFinalizacion) <= 0) {
+                    total += consumo.getMonto();
+                }
+
+            }
+        }
+
+        return total;
+    }
+
 }
