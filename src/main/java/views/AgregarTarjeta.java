@@ -29,6 +29,7 @@ public class AgregarTarjeta extends JFrame {
         add(new JLabel("DNI Cliente: "));
         this.dni = new JTextField();
         add(this.dni);
+        add(new JLabel());
 
         add(new JLabel("Tipo Tarjeta: "));
 
@@ -60,10 +61,10 @@ public class AgregarTarjeta extends JFrame {
     private void agregar()
     {
         String tipo = debito.isSelected() ? "Debito" : "Credito";
-
-        AgregarTarjetaDTO tarjeta = new AgregarTarjetaDTO(Integer.parseInt(dni.getText()), tipo);
-
         try{
+            this.verifyData();
+            AgregarTarjetaDTO tarjeta = new AgregarTarjetaDTO(Integer.parseInt(dni.getText()), tipo);
+
             this.tarjetas.agregarTarjeta(tarjeta);
             JOptionPane.showMessageDialog(this, "Tarjeta agregado exitosamente");
 
@@ -72,9 +73,14 @@ public class AgregarTarjeta extends JFrame {
         }
     }
 
-    public static void main()
+    /**
+     * Verifica que los datos sean válidos
+     * @throws Exception
+     */
+    private void verifyData() throws Exception
     {
-        SwingUtilities.invokeLater(AgregarTarjeta::new);
+        if(!dni.getText().matches("\\d+")) throw new Exception("El DNI ingresado no es válido");
+        if(!debito.isSelected() && !credito.isSelected()) throw new Exception("Se debe seleccionar al menos un tipo de tarjeta");
     }
 
 }

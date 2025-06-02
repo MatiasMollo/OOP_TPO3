@@ -52,12 +52,13 @@ public class AgregarCliente extends JFrame {
     }
 
     private void guardar(){
-        ClienteDTO cliente = new ClienteDTO(
-                nombreTxt.getText(),
-                Integer.parseInt(dniTxt.getText())
-        );
-
         try{
+            this.verifyData();
+            ClienteDTO cliente = new ClienteDTO(
+                    nombreTxt.getText(),
+                    Integer.parseInt(dniTxt.getText())
+            );
+
             this.clientes.agregarCliente(cliente);
             JOptionPane.showMessageDialog(this, "Cliente agregado exitosamente");
         }
@@ -66,9 +67,16 @@ public class AgregarCliente extends JFrame {
         }
     }
 
-    public static void main()
+
+    /**
+     * Verifica que los datos sean válidos
+     * @throws Exception
+     */
+    private void verifyData() throws Exception
     {
-        SwingUtilities.invokeLater(AgregarCliente::new);
+        if(nombreTxt.getText().isEmpty() || nombreTxt.getText().length() < 3) throw new Exception("El nombre no es válido");
+        if(!dniTxt.getText().matches("\\d+")) throw new Exception("El DNI ingresado no es válido");
+
     }
 
 }

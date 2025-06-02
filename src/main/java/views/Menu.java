@@ -15,8 +15,8 @@ public class Menu extends JFrame {
         JButton agregarTarjeta = new JButton("Agregar Tarjeta");
         JButton agregarCliente = new JButton("Agregar Cliente");
 
-        agregarTarjeta.addActionListener(e -> AgregarTarjeta.main());
-        agregarCliente.addActionListener(e -> AgregarCliente.main());
+        agregarTarjeta.addActionListener(e -> SwingUtilities.invokeLater(AgregarTarjeta::new));
+        agregarCliente.addActionListener(e -> SwingUtilities.invokeLater(AgregarCliente::new));
 
         add(agregarTarjeta);
         add(agregarCliente);
