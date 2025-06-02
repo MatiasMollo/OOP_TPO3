@@ -162,15 +162,36 @@ public class TarjetaController {
         return tarjeta;
     }
 
+    /*Para Tarjetas de Débito: Se suman todos los consumos del período y se descuenta la devolución del IVA,
+    calculada en base a un porcentaje específico.
+    Para Tarjetas de Crédito: Se suman todos los consumos del período y se añade el interés,
+    calculado en base a un porcentaje específico.
+    */
     public double calcularTotalConsumo(ConsultarConsumoDTO consultarConsumoDTO) {
         List<Consumo> consumosEnRango = getConsumos(consultarConsumoDTO);
+        Tarjeta tarjeta = buscarTarjeta(consultarConsumoDTO.getNumeroTarjeta());
         double total = 0;
 
         for (Consumo consumo : consumosEnRango) {
             total += consumo.getMonto();
         }
 
-        return total;
+        if (tarjeta instanceof TarjetaCredito credito) {
+            return aplicarInteresCredito(total, credito);
+        } else if (tarjeta instanceof TarjetaDebito debito) {
+            return aplicarDevolucionIVA(total, debito);
+        } else {
+            throw new IllegalArgumentException("Tipo de tarjeta desconocido.");
+        }
+    }
+
+    public float aplicarDevolucionIVA(double total, TarjetaDebito tarjeta){
+        float porcentajeIva = tarjeta.getDevIVA();
+        return (float) (total - (porcentajeIva * total / 100.0));
+    }
+    public float aplicarInteresCredito(double total, TarjetaCredito tarjeta){
+        float porcentajeInteres = tarjeta.getInteres();
+        return (float) (total + (porcentajeInteres * total / 100.0));
     }
 
     public List<Consumo> getConsumos(ConsultarConsumoDTO consultarConsumoDTO) {
