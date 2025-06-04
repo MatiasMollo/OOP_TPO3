@@ -38,12 +38,14 @@ public class ConsultarConsumos extends JFrame {
 
         setTitle("Consultar Consumos");
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-        setLayout(new GridLayout(5, 2, 10, 10));
-        setSize(600, 400);
+        setSize(600, 450);
+        setLayout(new BorderLayout(10, 10));
 
         tarjetas = TarjetaController.getInstance();
 
-        // Crear componentes
+        // Panel superior con los campos
+        JPanel panelCampos = new JPanel(new GridLayout(4, 2, 10, 10));
+
         numeroTarjetaLabel = new JLabel("Número de Tarjeta:");
         fechaInicioLabel = new JLabel("Fecha Inicio (dd/MM/yyyy):");
         fechaFinLabel = new JLabel("Fecha Fin (dd/MM/yyyy):");
@@ -55,33 +57,32 @@ public class ConsultarConsumos extends JFrame {
         consultar = new JButton("Consultar");
         cancelar = new JButton("Cancelar");
 
-        // Agregar componentes al layout
-        add(numeroTarjetaLabel);
-        add(numeroTarjetaValorLabel);
-        add(fechaInicioLabel);
-        add(fechaInicioTxt);
-        add(fechaFinLabel);
-        add(fechaFinTxt);
-        add(consultar);
-        add(cancelar);
+        panelCampos.add(numeroTarjetaLabel);
+        panelCampos.add(numeroTarjetaValorLabel);
+        panelCampos.add(fechaInicioLabel);
+        panelCampos.add(fechaInicioTxt);
+        panelCampos.add(fechaFinLabel);
+        panelCampos.add(fechaFinTxt);
+        panelCampos.add(consultar);
+        panelCampos.add(cancelar);
 
-        // Tabla en otro panel para que ocupe bien el espacio
+        add(panelCampos, BorderLayout.NORTH);
+
+        // Tabla
         tablaModelo = new DefaultTableModel(new String[]{"Fecha", "Establecimiento", "Monto"}, 0);
         tablaConsumos = new JTable(tablaModelo);
         JScrollPane scrollPane = new JScrollPane(tablaConsumos);
+        scrollPane.setPreferredSize(new Dimension(550, 200));
 
         totalLabel = new JLabel("Total: $0.00");
         totalLabel.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
 
-        // Panel contenedor para tabla + total abajo
         JPanel panelTabla = new JPanel(new BorderLayout());
         panelTabla.add(scrollPane, BorderLayout.CENTER);
         panelTabla.add(totalLabel, BorderLayout.SOUTH);
 
-        // Agregar el panelTabla al JFrame en la posición SOUTH para que quede debajo del grid
-        add(panelTabla);
+        add(panelTabla, BorderLayout.CENTER);
 
-        // Acción botones
         consultar.addActionListener(e -> consultarConsumos());
         cancelar.addActionListener(e -> limpiarCampos());
     }
