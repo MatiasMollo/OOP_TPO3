@@ -18,10 +18,11 @@ public class BuscarTarjetaView extends JFrame {
     public BuscarTarjetaView() {
 
         this.setTitle("Buscar Tarjeta: ");
+        setVisible(true);
 
         tarjetaController = TarjetaController.getInstance();
 
-        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         setSize(500, 400);
         setLayout(new GridLayout(3,2));
 
@@ -63,9 +64,6 @@ public class BuscarTarjetaView extends JFrame {
     }
 
     public static void main(String[] args) {
-        SwingUtilities.invokeLater(() -> {
-            BuscarTarjetaView view = new BuscarTarjetaView();
-            view.setVisible(true);
-        });
+        SwingUtilities.invokeLater(BuscarTarjetaView::new);
     }
 }

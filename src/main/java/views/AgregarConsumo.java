@@ -31,6 +31,7 @@ public class AgregarConsumo extends JFrame {
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         setLayout(new GridLayout(5, 2, 10, 10));
         setSize(400, 250);
+        setVisible(true);
 
         this.tarjetas = TarjetaController.getInstance();
 
