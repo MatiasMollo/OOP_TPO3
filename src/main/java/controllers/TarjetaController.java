@@ -3,6 +3,7 @@ package controllers;
 import dto.AgregarConsumoDTO;
 import dto.AgregarTarjetaDTO;
 import dto.ConsultarConsumoDTO;
+import dto.MostrarConsumoDTO;
 import models.*;
 
 import java.util.*;
@@ -104,6 +105,7 @@ public class TarjetaController {
     private Tarjeta crearTarjeta(Cliente cliente, String tipo) throws Exception
     {
         String numero = generarNumeroTarjeta();
+        System.out.println(numero);
         Tarjeta tarjeta = null;
 
         if(tipo.toUpperCase().equals("DEBITO"))  tarjeta = new TarjetaDebito(cliente, numero);
@@ -140,6 +142,14 @@ public class TarjetaController {
         return new Consumo(fecha, establecimiento, monto);
     }
 
+    public MostrarConsumoDTO parsearConsumo(Consumo consumo){
+        Date fecha = consumo.getFecha();
+        String establecimiento = consumo.getEstablecimiento();
+        Float monto = consumo.getMonto();
+
+        return new MostrarConsumoDTO(fecha, establecimiento, monto);
+    }
+
     /**
      * Realiza una búsqueda sobre las tarjetas en base al número de tarjeta o dni de cliente
      * @param numero String
@@ -172,11 +182,11 @@ public class TarjetaController {
      * @return
      */
     public double calcularConsumoReal(ConsultarConsumoDTO consultarConsumoDTO) {
-        List<Consumo> consumosEnRango = getConsumos(consultarConsumoDTO);
         Tarjeta tarjeta = buscarTarjeta(consultarConsumoDTO.getNumeroTarjeta());
+        List<MostrarConsumoDTO> consumosEnRango = getConsumos(consultarConsumoDTO);
         double total = 0;
 
-        for (Consumo consumo : consumosEnRango) {
+        for (MostrarConsumoDTO consumo : consumosEnRango) {
             total += consumo.getMonto();
         }
 
@@ -198,17 +208,17 @@ public class TarjetaController {
         return (float) (total + (porcentajeInteres * total / 100.0));
     }
 
-    public List<Consumo> getConsumos(ConsultarConsumoDTO consultarConsumoDTO) {
+    public List<MostrarConsumoDTO> getConsumos(ConsultarConsumoDTO consultarConsumoDTO) {
         Tarjeta tarjeta = buscarTarjeta(consultarConsumoDTO.getNumeroTarjeta());
         List<Consumo> consumos = tarjeta.getConsumos();
-        List<Consumo> consumosEnRango = new ArrayList<>();
+        List<MostrarConsumoDTO> consumosEnRango = new ArrayList<>();
 
         for (Consumo consumo : consumos) {
             Date fecha = consumo.getFecha();
 
             if (fecha.compareTo(consultarConsumoDTO.getFechaInicio()) >= 0
                     && fecha.compareTo(consultarConsumoDTO.getFechaFin()) <= 0) {
-                consumosEnRango.add(consumo);
+                consumosEnRango.add(parsearConsumo(consumo));
             }
         }
 
