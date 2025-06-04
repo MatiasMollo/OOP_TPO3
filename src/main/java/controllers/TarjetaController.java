@@ -1,12 +1,11 @@
 package controllers;
 
+import dto.AgregarConsumoDTO;
 import dto.AgregarTarjetaDTO;
+import dto.ConsultarConsumoDTO;
 import models.*;
 
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.Random;
+import java.util.*;
 
 public class TarjetaController {
     private List<Tarjeta> tarjetas;
@@ -23,6 +22,7 @@ public class TarjetaController {
 
         return instance;
     }
+
 
     /**
      * Retorna todas las tarjetas almacenadas
@@ -116,23 +116,28 @@ public class TarjetaController {
 
     /**
      * Agrega el consumo a la tarjeta correspondiente
-     * @param numeroTarjeta String
-     * @param fecha Date
-     * @param importe float
-     * @param establecimiento String
+     * @param agregarConsumoDTO AgregarConsumoDTO
      * @return
      * @throws Exception
      */
-    public Consumo agregarConsumo(String numeroTarjeta, Date fecha, float importe, String establecimiento) throws Exception
+    public Consumo agregarConsumo(AgregarConsumoDTO agregarConsumoDTO) throws Exception
     {
-        Tarjeta tarjeta = this.buscarTarjeta(numeroTarjeta);
-
+        //verifica que tarjeta exista
+        Tarjeta tarjeta = this.buscarTarjeta(agregarConsumoDTO.getNumeroTarjeta());
         if(tarjeta == null) throw new Exception("La tarjeta no existe en los registros");
 
-        Consumo consumo = new Consumo(fecha, establecimiento, importe);
+        Consumo consumo = parsearConsumo(agregarConsumoDTO);
         tarjeta.agregarConsumo(consumo);
 
         return consumo;
+    }
+
+    public Consumo parsearConsumo(AgregarConsumoDTO agregarConsumoDTO){
+        Date fecha = agregarConsumoDTO.getFecha();
+        String establecimiento = agregarConsumoDTO.getEstablecimiento();
+        Float monto = agregarConsumoDTO.getMonto();
+
+        return new Consumo(fecha, establecimiento, monto);
     }
 
     /**
@@ -156,4 +161,54 @@ public class TarjetaController {
 
         return tarjeta;
     }
+
+    /*Para Tarjetas de Débito: Se suman todos los consumos del período y se descuenta la devolución del IVA,
+    calculada en base a un porcentaje específico.
+    Para Tarjetas de Crédito: Se suman todos los consumos del período y se añade el interés,
+    calculado en base a un porcentaje específico.
+    */
+    public double calcularConsumoReal(ConsultarConsumoDTO consultarConsumoDTO) {
+        List<Consumo> consumosEnRango = getConsumos(consultarConsumoDTO);
+        Tarjeta tarjeta = buscarTarjeta(consultarConsumoDTO.getNumeroTarjeta());
+        double total = 0;
+
+        for (Consumo consumo : consumosEnRango) {
+            total += consumo.getMonto();
+        }
+
+        if (tarjeta instanceof TarjetaCredito credito) {
+            return aplicarInteresCredito(total, credito);
+        } else if (tarjeta instanceof TarjetaDebito debito) {
+            return aplicarDevolucionIVA(total, debito);
+        } else {
+            throw new IllegalArgumentException("Tipo de tarjeta desconocido.");
+        }
+    }
+
+    public float aplicarDevolucionIVA(double total, TarjetaDebito tarjeta){
+        float porcentajeIva = tarjeta.getDevIVA();
+        return (float) (total - (porcentajeIva * total / 100.0));
+    }
+    public float aplicarInteresCredito(double total, TarjetaCredito tarjeta){
+        float porcentajeInteres = tarjeta.getInteres();
+        return (float) (total + (porcentajeInteres * total / 100.0));
+    }
+
+    public List<Consumo> getConsumos(ConsultarConsumoDTO consultarConsumoDTO) {
+        Tarjeta tarjeta = buscarTarjeta(consultarConsumoDTO.getNumeroTarjeta());
+        List<Consumo> consumos = tarjeta.getConsumos();
+        List<Consumo> consumosEnRango = new ArrayList<>();
+
+        for (Consumo consumo : consumos) {
+            Date fecha = consumo.getFecha();
+
+            if (fecha.compareTo(consultarConsumoDTO.getFechaInicio()) >= 0
+                    && fecha.compareTo(consultarConsumoDTO.getFechaFin()) <= 0) {
+                consumosEnRango.add(consumo);
+            }
+        }
+
+        return consumosEnRango;
+    }
+
 }

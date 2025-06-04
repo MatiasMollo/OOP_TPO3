@@ -21,6 +21,24 @@ public class ClienteController {
     }
 
     /**
+     * Retorna una lista de ClienteDTO para ser utilizado en la vista
+     * @return List<ClienteDTO>
+     */
+    public List<ClienteDTO> getClientes()
+    {
+        List<ClienteDTO> list = new ArrayList<ClienteDTO>();
+
+        for(Cliente cliente : clientes){
+            list.add(new ClienteDTO(
+                cliente.getNombre(),
+                cliente.getDni()
+            ));
+        }
+
+        return list;
+    }
+
+    /**
      * Realiza la búsqueda de un cliente en base al dni
      * @param dni Cliente
      * @return
