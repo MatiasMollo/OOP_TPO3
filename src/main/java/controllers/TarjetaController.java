@@ -162,11 +162,15 @@ public class TarjetaController {
         return tarjeta;
     }
 
-    /*Para Tarjetas de Débito: Se suman todos los consumos del período y se descuenta la devolución del IVA,
-    calculada en base a un porcentaje específico.
-    Para Tarjetas de Crédito: Se suman todos los consumos del período y se añade el interés,
-    calculado en base a un porcentaje específico.
-    */
+    /**
+     * Calcula el consumo de la tarjeta
+     * Para Tarjetas de Débito: Se suman todos los consumos del período y se descuenta la devolución del IVA,
+     * calculada en base a un porcentaje específico.
+     * Para Tarjetas de Crédito: Se suman todos los consumos del período y se añade el interés,
+     * calculado en base a un porcentaje específico.
+     * @param consultarConsumoDTO
+     * @return
+     */
     public double calcularConsumoReal(ConsultarConsumoDTO consultarConsumoDTO) {
         List<Consumo> consumosEnRango = getConsumos(consultarConsumoDTO);
         Tarjeta tarjeta = buscarTarjeta(consultarConsumoDTO.getNumeroTarjeta());
