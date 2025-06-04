@@ -2,6 +2,7 @@ package views;
 
 import controllers.TarjetaController;
 import dto.ConsultarConsumoDTO;
+import dto.MostrarConsumoDTO;
 import models.Consumo;
 
 import javax.swing.*;
@@ -90,13 +91,13 @@ public class ConsultarConsumos extends JFrame {
             DatosConsulta datos = validarCampos();
             ConsultarConsumoDTO consultarConsumoDTO = new ConsultarConsumoDTO(numeroTarjeta, datos.fechaInicio, datos.fechaFin);
 
-            List<Consumo> consumos = tarjetas.getConsumos(consultarConsumoDTO);
+            List<MostrarConsumoDTO> consumos = tarjetas.getConsumos(consultarConsumoDTO);
             double total = tarjetas.calcularConsumoReal(consultarConsumoDTO);
 
             // Actualizar tabla
             tablaModelo.setRowCount(0);
             SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
-            for (Consumo c : consumos) {
+            for (MostrarConsumoDTO c : consumos) {
                 tablaModelo.addRow(new Object[]{
                         sdf.format(c.getFecha()),
                         c.getEstablecimiento(),
