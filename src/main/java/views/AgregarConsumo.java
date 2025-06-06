@@ -89,11 +89,11 @@ public class AgregarConsumo extends JFrame {
 
         Date fecha;
         try {
-            SimpleDateFormat sdf = new SimpleDateFormat("dd/mm/yyyy");
+            SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
             sdf.setLenient(false);
             fecha = sdf.parse(fechaStr);
         } catch (ParseException e) {
-            throw new RuntimeException("Fecha inválida. Usá formato dd/mm/yyyy.");
+            throw new RuntimeException("Fecha inválida. Usá formato dd/MM/yyyy.");
         }
 
         float monto;

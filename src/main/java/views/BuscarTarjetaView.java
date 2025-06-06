@@ -12,10 +12,11 @@ public class BuscarTarjetaView extends JFrame {
     private JLabel lblDNI;
     private JTextField txtNumero;
     private JButton btnBuscar;
+    private JButton btnConsultarConsumos;
     private JTextArea resultado;
-    private JButton listar;
 
     TarjetaController tarjetaController;
+    private String numeroTarjeta = "";
 
     public BuscarTarjetaView() {
 
@@ -37,37 +38,36 @@ public class BuscarTarjetaView extends JFrame {
         btnBuscar = new JButton("Buscar");
         add(btnBuscar);
 
-        this.listar = new JButton("");
-
         resultado = new JTextArea();
         resultado.setEditable(false);
         add(new JScrollPane(resultado));
-        add(this.listar);
 
-        JButton cerrar = new JButton("Cerrar");
-        cerrar.addActionListener(e -> dispose());
-        add(cerrar);
+        btnConsultarConsumos = new JButton("Consultar consumos");
+        btnConsultarConsumos.setEnabled(false);
+        add(btnConsultarConsumos);
 
         btnBuscar.addActionListener(buscarTarjeta());
+        btnConsultarConsumos.addActionListener((i) -> buscarConsumos());
+    }
+
+    private void buscarConsumos(){
+        ConsultarConsumos consultarConsumos = new ConsultarConsumos(numeroTarjeta);
+        consultarConsumos.setVisible(true);
     }
 
     private ActionListener buscarTarjeta() {
         return e -> {
             try {
                 String numero = txtNumero.getText().trim();
-
-                dto.BuscarTarjetaDTO dto = new dto.BuscarTarjetaDTO(numero);
-
-                TarjetaDTO tarjeta = tarjetaController.buscarTarjetaDto(dto.getNumero());
+                TarjetaDTO tarjeta = tarjetaController.buscarTarjetaDto(numero);
 
                 if (tarjeta != null) {
                     resultado.setText(tarjeta.toString());
-                    this.listar.setText("Listar consumos");
-                    this.listar.addActionListener(x -> new ConsultarConsumos(tarjeta.getNumero()));
+
+                    numeroTarjeta = tarjeta.getNumero();
+                    btnConsultarConsumos.setEnabled(true);
                 } else {
                     resultado.setText("No se encontró ninguna tarjeta asociada a ese DNI.");
-                    this.listar.setText("");
-                    this.listar.removeActionListener(x -> new ConsultarConsumos(tarjeta.getNumero()));
                 }
 
             } catch (Exception ex) {
