@@ -11,9 +11,11 @@ public class BuscarTarjetaView extends JFrame {
     private JLabel lblDNI;
     private JTextField txtNumero;
     private JButton btnBuscar;
+    private JButton btnConsultarConsumos;
     private JTextArea resultado;
 
     TarjetaController tarjetaController;
+    private String numeroTarjeta = "";
 
     public BuscarTarjetaView() {
 
@@ -39,7 +41,17 @@ public class BuscarTarjetaView extends JFrame {
         resultado.setEditable(false);
         add(new JScrollPane(resultado));
 
+        btnConsultarConsumos = new JButton("Consultar consumos");
+        btnConsultarConsumos.setEnabled(false);
+        add(btnConsultarConsumos);
+
         btnBuscar.addActionListener(buscarTarjeta());
+        btnConsultarConsumos.addActionListener((i) -> buscarConsumos());
+    }
+
+    private void buscarConsumos(){
+        ConsultarConsumos consultarConsumos = new ConsultarConsumos(numeroTarjeta);
+        consultarConsumos.setVisible(true);
     }
 
     private ActionListener buscarTarjeta() {
@@ -53,6 +65,9 @@ public class BuscarTarjetaView extends JFrame {
 
                 if (tarjeta != null) {
                     resultado.setText(tarjeta.toString());
+
+                    numeroTarjeta = dto.getNumero();
+                    btnConsultarConsumos.setEnabled(true);
                 } else {
                     resultado.setText("No se encontró ninguna tarjeta asociada a ese DNI.");
                 }
