@@ -17,18 +17,21 @@ public class Menu extends JFrame {
         JButton agregarConsumo = new JButton("Agregar Consumo");
         JButton listarClientes = new JButton("Listar Clientes");
         JButton buscarTarjeta  = new JButton("Buscar Tarjeta");
+        //JButton consultarConsumos  = new JButton("Consultar consumos");
 
         agregarTarjeta.addActionListener(e -> SwingUtilities.invokeLater(AgregarTarjeta::new));
         agregarConsumo.addActionListener(e -> SwingUtilities.invokeLater(AgregarConsumo::new));
         agregarCliente.addActionListener(e -> SwingUtilities.invokeLater(AgregarCliente::new));
         listarClientes.addActionListener(e -> SwingUtilities.invokeLater(ClientesDisponibles::new));
         buscarTarjeta.addActionListener(e -> SwingUtilities.invokeLater(BuscarTarjetaView::new));
+        //consultarConsumos.addActionListener(e -> SwingUtilities.invokeLater(ConsultarConsumos::new));
 
         add(agregarTarjeta);
         add(agregarConsumo);
         add(agregarCliente);
         add(listarClientes);
         add(buscarTarjeta);
+        //add(consultarConsumos);
 
         setVisible(true);
     }

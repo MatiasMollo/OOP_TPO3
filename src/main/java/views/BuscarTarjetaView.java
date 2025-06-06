@@ -1,6 +1,7 @@
 package views;
 
 import controllers.TarjetaController;
+import dto.TarjetaDTO;
 import models.Tarjeta;
 
 import javax.swing.*;
@@ -12,6 +13,7 @@ public class BuscarTarjetaView extends JFrame {
     private JTextField txtNumero;
     private JButton btnBuscar;
     private JTextArea resultado;
+    private JButton listar;
 
     TarjetaController tarjetaController;
 
@@ -35,9 +37,16 @@ public class BuscarTarjetaView extends JFrame {
         btnBuscar = new JButton("Buscar");
         add(btnBuscar);
 
+        this.listar = new JButton("");
+
         resultado = new JTextArea();
         resultado.setEditable(false);
         add(new JScrollPane(resultado));
+        add(this.listar);
+
+        JButton cerrar = new JButton("Cerrar");
+        cerrar.addActionListener(e -> dispose());
+        add(cerrar);
 
         btnBuscar.addActionListener(buscarTarjeta());
     }
@@ -49,12 +58,16 @@ public class BuscarTarjetaView extends JFrame {
 
                 dto.BuscarTarjetaDTO dto = new dto.BuscarTarjetaDTO(numero);
 
-                Tarjeta tarjeta = tarjetaController.buscarTarjeta(dto.getNumero());
+                TarjetaDTO tarjeta = tarjetaController.buscarTarjetaDto(dto.getNumero());
 
                 if (tarjeta != null) {
                     resultado.setText(tarjeta.toString());
+                    this.listar.setText("Listar consumos");
+                    this.listar.addActionListener(x -> new ConsultarConsumos(tarjeta.getNumero()));
                 } else {
                     resultado.setText("No se encontró ninguna tarjeta asociada a ese DNI.");
+                    this.listar.setText("");
+                    this.listar.removeActionListener(x -> new ConsultarConsumos(tarjeta.getNumero()));
                 }
 
             } catch (Exception ex) {
