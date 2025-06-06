@@ -1,9 +1,6 @@
 package controllers;
 
-import dto.AgregarConsumoDTO;
-import dto.AgregarTarjetaDTO;
-import dto.ConsultarConsumoDTO;
-import dto.MostrarConsumoDTO;
+import dto.*;
 import models.*;
 
 import java.util.*;
@@ -170,6 +167,22 @@ public class TarjetaController {
         }
 
         return tarjeta;
+    }
+
+    /**
+     * Retorna el DTO de tarjeta para usarse en la vista
+     * @param numero
+     * @return
+     * @throws Exception
+     */
+    public TarjetaDTO buscarTarjetaDto(String numero) throws Exception
+    {
+        Tarjeta tarjeta = buscarTarjeta(numero);
+        if(tarjeta == null) throw new Exception("No se encontró la tarjeta");
+
+        TarjetaDTO tarjetaDto = new TarjetaDTO(tarjeta.getCliente().getDni(), tarjeta.getNumero());
+
+        return tarjetaDto;
     }
 
     /**

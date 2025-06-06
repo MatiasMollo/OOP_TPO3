@@ -26,4 +26,13 @@ public class Consumo {
     public float getMonto() {
         return this.monto;
     }
+
+    @Override
+    public String toString() {
+        return "Consumo{" +
+                "fecha=" + fecha +
+                ", establecimiento='" + establecimiento + '\'' +
+                ", monto=" + monto +
+                '}';
+    }
 }

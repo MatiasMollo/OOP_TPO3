@@ -40,6 +40,7 @@ public class ConsultarConsumos extends JFrame {
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         setSize(600, 450);
         setLayout(new BorderLayout(10, 10));
+        setVisible(true);
 
         tarjetas = TarjetaController.getInstance();
 
